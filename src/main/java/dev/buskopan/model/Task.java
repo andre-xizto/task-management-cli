@@ -9,6 +9,11 @@ public class Task {
     private String name;
     private TaskStatus status;
 
+    public Task(String name) {
+        this.name = name;
+        this.status = TaskStatus.TODO;
+    }
+
     public long getId() {
         return id;
     }
