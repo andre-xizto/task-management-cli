@@ -30,6 +30,7 @@ public class TaskType extends TypeAdapter<Task> {
                 case "status" -> task.setStatus(getStatus(in.nextString()));
             }
         }
+        in.endObject();
         return task;
     }
 
