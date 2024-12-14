@@ -50,6 +50,6 @@ public class Task {
         return "=============" +
                 "\nid: " + id +
                 "\nname: " + name +
-                "\nstatus: " + status;
+                "\nstatus: " + status.getDisplay();
     }
 }
