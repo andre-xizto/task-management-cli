@@ -44,4 +44,12 @@ public class Task {
     public int hashCode() {
         return Objects.hash(id, name, status);
     }
+
+    @Override
+    public String toString() {
+        return "=============" +
+                "\nid: " + id +
+                "\nname: " + name +
+                "\nstatus: " + status;
+    }
 }
