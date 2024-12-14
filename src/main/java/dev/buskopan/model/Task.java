@@ -14,6 +14,9 @@ public class Task {
         this.status = TaskStatus.TODO;
     }
 
+    public Task() {
+    }
+
     public long getId() {
         return id;
     }
