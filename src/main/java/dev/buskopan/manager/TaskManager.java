@@ -2,13 +2,15 @@ package dev.buskopan.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import dev.buskopan.model.Task;
 import dev.buskopan.type_adapter.TaskType;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class TaskManager {
 
@@ -24,9 +26,8 @@ public class TaskManager {
     }
 
     private void checkAndCreateFiles() {
-        String userHomePath = System.getProperty("user.home");
-        Path directoryPath = getDirectoryPath(userHomePath);
-        Path filePath = getFilePath(directoryPath);
+        Path directoryPath = getDirectoryPath();
+        Path filePath = getFilePath();
 
         if (!Files.exists(directoryPath)) {
             try {
@@ -47,11 +48,35 @@ public class TaskManager {
         }
     }
 
-    private Path getFilePath(Path directoryPath) {
+    private void saveTasks(List<Task> tasks) {
+        Path filePath = getFilePath();
+        File jsonFile = filePath.toFile();
+        try (FileWriter writer = new FileWriter(jsonFile)) {
+            gson.toJson(tasks,writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<Task> listTasks() {
+        Path filePath = getFilePath();
+        File jsonFile = filePath.toFile();
+
+        try (Reader reader = new FileReader(jsonFile)) {
+            return gson.fromJson(reader, new TypeToken<List<Task>>(){}.getType());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private Path getFilePath() {
+        Path directoryPath = getDirectoryPath();
         return directoryPath.resolve(FILE_PATH);
     }
 
-    private Path getDirectoryPath(String parentPath) {
-        return Paths.get(parentPath, DIRECTORY_PATH);
+    private Path getDirectoryPath() {
+        String userHome = System.getProperty("user.home");
+        return Paths.get(userHome, DIRECTORY_PATH);
     }
 }
