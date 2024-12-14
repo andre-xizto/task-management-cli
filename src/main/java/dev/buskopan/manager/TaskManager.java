@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dev.buskopan.model.Task;
+import dev.buskopan.task_enum.TaskStatus;
 import dev.buskopan.type_adapter.TaskType;
 
 import java.io.*;
@@ -11,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
 
 public class TaskManager {
 
@@ -68,6 +70,46 @@ public class TaskManager {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public long createTask (String name) {
+        List<Task> tasks = listTasks();
+        long id = tasks.getLast() == null ? 1 : tasks.getLast().getId() + 1;
+
+        Task task = new Task(name);
+        task.setId(id);
+
+        tasks.add(task);
+        saveTasks(tasks);
+
+        return id;
+
+    }
+
+    public boolean removeTask(long id) {
+        List<Task> tasks = listTasks();
+        Optional<Task> optionalTask = tasks.stream().filter(e -> e.getId() == id).findFirst();
+
+        if (optionalTask.isEmpty()) {
+            return false;
+        }
+
+        tasks.remove(optionalTask.get());
+        saveTasks(tasks);
+        return true;
+    }
+
+    public boolean updateTask(long id, TaskStatus status) {
+        List<Task> tasks = listTasks();
+        Optional<Task> optionalTask = tasks.stream().filter(e -> e.getId() == id).findFirst();
+
+        if (optionalTask.isEmpty()) {
+            return false;
+        }
+
+        optionalTask.get().setStatus(status);
+        saveTasks(tasks);
+        return true;
     }
 
     private Path getFilePath() {
