@@ -11,7 +11,6 @@ import picocli.CommandLine;
 public class AddTaskCommand implements Runnable{
 
     @CommandLine.Parameters(
-            index = "0..*",
             description = "Task name"
     )
     private String taskName;
