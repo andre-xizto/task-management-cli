@@ -74,7 +74,7 @@ public class TaskManager {
 
     public long createTask (String name) {
         List<Task> tasks = listTasks();
-        long id = tasks.getLast() == null ? 1 : tasks.getLast().getId() + 1;
+        long id = tasks.isEmpty() ? 1 : tasks.getLast().getId() + 1;
 
         Task task = new Task(name);
         task.setId(id);
